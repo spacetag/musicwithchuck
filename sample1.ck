@@ -1,7 +1,8 @@
-fun void loopM8(float triad[], SinOsc c, Meter m) {
+fun void loopM8(float triad[], Flute c, Meter m) {
     for(0 => int i; i < 8; i++)
     {
         triad[i] => c.freq;
+        Math.random2f( .6, .9 ) => c.noteOn;
         m.sixteenth::second => now; 
     }
 }
@@ -9,7 +10,19 @@ fun void loopM8(float triad[], SinOsc c, Meter m) {
 fun void main() {
     <<<"Begin">>>;
     //config/initialization section
-    SinOsc chl1 => dac;
+    Flute chl1 => PoleZero f => JCRev r => dac;
+    // Just a bunch of flute configuration
+    .75 => r.gain;
+    .05 => r.mix;
+    .99 => f.blockZero;
+    chl1.clear( 1.0 );
+    Math.random2f( 0, 1 ) => chl1.jetDelay;
+    Math.random2f( 0, 1 ) => chl1.jetReflection;
+    Math.random2f( 0, 1 ) => chl1.endReflection;
+    Math.random2f( 0, 1 ) => chl1.noiseGain;
+    Math.random2f( 0, 12 ) => chl1.vibratoFreq;
+    Math.random2f( 0, 1 ) => chl1.vibratoGain;
+    Math.random2f( 0, 1 ) => chl1.pressure;
     //SinOsc chl2 => dac;
     Notes notes;
     Harmony harmony; 
@@ -17,7 +30,7 @@ fun void main() {
     notes.setNoteStream();
     meter.setMeter(100);
     <<<"Configuration complete">>>;
-    harmony.setScale(notes, notes.minor, 2);
+    harmony.setScale(notes, notes.mixolydian, 2);
     <<<"Scales and chords set">>>;
     //begin making music
     for(0 => int i; i < 4; i++) 
@@ -224,17 +237,24 @@ class Harmony
 class Notes
 {
     //Musical scales
-    int major[];
+    int major[];// maj I, min III
     [1,0,1,0,1,1,0,1,0,1,0,1] @=> major;
-    int minor[];
+    int minor[];// maj VI, min I
     [1,0,1,1,0,1,0,1,1,0,1,0] @=> minor;
     int mHormonic[];
     [1,0,1,1,0,1,0,1,1,0,0,1] @=> mHormonic;
     int doubleHormonic[];
     [1,1,0,0,1,1,0,1,1,0,0,1] @=> doubleHormonic;
-    int Mixolydian[];
-    [1,0,1,0,1,1,0,1,0,1,1,0] @=> Mixolydian;
-    
+    int mixolydian[];//maj V, minor VII
+    [1,0,1,0,1,1,0,1,0,1,1,0] @=> mixolydian;
+    int locrian[];//maj VII, min II
+    [1,1,0,1,0,1,1,0,1,0,1,0] @=> locrian;
+    int phrygian[];//maj III, min V
+    [1,1,0,1,0,1,0,1,1,0,1,0] @=> phrygian;
+    int lydian[];// maj IV, min VI
+    [1,0,1,0,1,0,1,1,0,1,0,1] @=> lydian;
+    int dorian[];// maj II, min IV
+    [1,0,1,1,0,1,0,1,0,1,1,0] @=> dorian;
     //Chromatic musical tones
     static float noteStream[];
     static float notesByOctave[][];
