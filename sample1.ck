@@ -1,3 +1,64 @@
+fun void loopM8(float triad[], SinOsc c, Meter m) {
+    for(0 => int i; i < 8; i++)
+    {
+        triad[i] => c.freq;
+        m.sixteenth::second => now; 
+    }
+}
+
+fun void main() {
+    <<<"Begin">>>;
+    //config/initialization section
+    SinOsc chl1 => dac;
+    //SinOsc chl2 => dac;
+    Notes notes;
+    Harmony harmony; 
+    Meter meter;
+    notes.setNoteStream();
+    meter.setMeter(100);
+    <<<"Configuration complete">>>;
+    harmony.setScale(notes, notes.minor, 2);
+    <<<"Scales and chords set">>>;
+    //begin making music
+    for(0 => int i; i < 4; i++) 
+    {
+        loopM8(harmony.I, chl1, meter);
+        loopM8(harmony.IV, chl1, meter);
+        loopM8(harmony.III, chl1, meter);
+        loopM8(harmony.VII, chl1, meter);
+    }
+    <<<"End">>>;
+}
+main();
+//-------------Class declaration section--------------------
+//Chuck only supports shared data between files that is static
+//so below are classes that must be in the same file as the main program
+//------------------------------------------------------------
+
+//Meter class keeps track of time -- beats and rapidity
+class Meter
+{
+    //todo -- add more advanced timing
+    float whole;
+    float half;
+    float quarter;
+    float eighth;
+    float sixteenth;
+    fun void setMeter(int beatsPerMinute)
+    {
+        if(beatsPerMinute != 0)
+        {
+            //this is for seconds, todo must be a way to use the time class instead of floats
+            (1/beatsPerMinute) * 60 => quarter;
+            (beatsPerMinute * 2) * 60 => half;
+            (beatsPerMinute * 4) * 60 => whole;
+            (0.5/beatsPerMinute) * 60 => eighth;
+            (0.25/beatsPerMinute) * 60 => sixteenth;
+        }
+    }
+}
+
+//class Harmony t
 class Harmony 
 {
     //Chords
@@ -158,4 +219,35 @@ class Harmony
         temp6 @=> VI;
         temp7 @=> VII;
     }
+}
+
+class Notes
+{
+    //Musical scales
+    int major[];
+    [1,0,1,0,1,1,0,1,0,1,0,1] @=> major;
+    int minor[];
+    [1,0,1,1,0,1,0,1,1,0,1,0] @=> minor;
+    int mHormonic[];
+    [1,0,1,1,0,1,0,1,1,0,0,1] @=> mHormonic;
+    int doubleHormonic[];
+    [1,1,0,0,1,1,0,1,1,0,0,1] @=> doubleHormonic;
+    int Mixolydian[];
+    [1,0,1,0,1,1,0,1,0,1,1,0] @=> Mixolydian;
+    
+    //Chromatic musical tones
+    static float noteStream[];
+    static float notesByOctave[][];
+    
+    fun void setNoteStream()
+    {
+        float temp[85];
+        Math.pow(2.0,1.0/12.0) => float a;
+        for( 0 => int i; i < 85; i++ ) 
+        {
+           440.0 * Math.pow(a,i-45) => temp[i];
+        } 
+        temp @=> noteStream;
+    }
+    fun void setNotesByOctave(){}
 }
