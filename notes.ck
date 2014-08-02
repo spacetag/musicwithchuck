@@ -1,16 +1,24 @@
 class Notes
 {
     //Musical scales
-    int major[];
+    int major[];// maj I, min III
     [1,0,1,0,1,1,0,1,0,1,0,1] @=> major;
-    int minor[];
+    int minor[];// maj VI, min I
     [1,0,1,1,0,1,0,1,1,0,1,0] @=> minor;
     int mHormonic[];
     [1,0,1,1,0,1,0,1,1,0,0,1] @=> mHormonic;
     int doubleHormonic[];
     [1,1,0,0,1,1,0,1,1,0,0,1] @=> doubleHormonic;
-    int Mixolydian[];
-    [1,0,1,0,1,1,0,1,0,1,1,0] @=> Mixolydian;
+    int mixolydian[];//maj V, minor VII
+    [1,0,1,0,1,1,0,1,0,1,1,0] @=> mixolydian;
+    int locrian[];//maj VII, min II
+    [1,1,0,1,0,1,1,0,1,0,1,0] @=> locrian;
+    int phrygian[];//maj III, min V
+    [1,1,0,1,0,1,0,1,1,0,1,0] @=> phrygian;
+    int lydian[];// maj IV, min VI
+    [1,0,1,0,1,0,1,1,0,1,0,1] @=> lydian;
+    int dorian[];// maj II, min IV
+    [1,0,1,1,0,1,0,1,0,1,1,0] @=> dorian;
     
     //Chromatic musical tones
     static float noteStream[];

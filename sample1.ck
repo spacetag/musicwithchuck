@@ -1,8 +1,8 @@
-fun void loopM8(float triad[], Flute c, Meter m) {
-    for(0 => int i; i < 8; i++)
+fun void loopM8(float triad[], SinOsc c, Meter m, int start, int dir, int min, int max) 
+{
+    for(start => int i; i < max && i >= min; i + dir => i)
     {
         triad[i] => c.freq;
-        Math.random2f( .6, .9 ) => c.noteOn;
         m.sixteenth::second => now; 
     }
 }
@@ -10,35 +10,27 @@ fun void loopM8(float triad[], Flute c, Meter m) {
 fun void main() {
     <<<"Begin">>>;
     //config/initialization section
-    Flute chl1 => PoleZero f => JCRev r => dac;
-    // Just a bunch of flute configuration
-    .75 => r.gain;
-    .05 => r.mix;
-    .99 => f.blockZero;
-    chl1.clear( 1.0 );
-    Math.random2f( 0, 1 ) => chl1.jetDelay;
-    Math.random2f( 0, 1 ) => chl1.jetReflection;
-    Math.random2f( 0, 1 ) => chl1.endReflection;
-    Math.random2f( 0, 1 ) => chl1.noiseGain;
-    Math.random2f( 0, 12 ) => chl1.vibratoFreq;
-    Math.random2f( 0, 1 ) => chl1.vibratoGain;
-    Math.random2f( 0, 1 ) => chl1.pressure;
-    //SinOsc chl2 => dac;
+    SinOsc  chl1 => dac;
+    
     Notes notes;
     Harmony harmony; 
     Meter meter;
     notes.setNoteStream();
     meter.setMeter(100);
     <<<"Configuration complete">>>;
-    harmony.setScale(notes, notes.mixolydian, 2);
+    harmony.setScale(notes, notes.mHormonic, 2);
     <<<"Scales and chords set">>>;
     //begin making music
-    for(0 => int i; i < 4; i++) 
+    for(0 => int i; i < 2; i++) 
     {
-        loopM8(harmony.I, chl1, meter);
-        loopM8(harmony.IV, chl1, meter);
-        loopM8(harmony.III, chl1, meter);
-        loopM8(harmony.VII, chl1, meter);
+        loopM8(harmony.I, chl1, meter, 7,-1,0, 8);
+        loopM8(harmony.IV, chl1, meter, 7, -1, 0, 8);
+        loopM8(harmony.III, chl1, meter, 7, -1,0, 8);
+        loopM8(harmony.VII, chl1, meter, 3, -1,0, 8);
+        loopM8(harmony.V, chl1, meter, 3, -1,0, 8);
+        loopM8(harmony.II, chl1, meter, 7, -1,0, 8);
+        loopM8(harmony.scale, chl1, meter, 15, -1,0, 16);
+
     }
     <<<"End">>>;
 }
